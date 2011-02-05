@@ -16,7 +16,7 @@ module Prattle
       attr_reader :operator, :lhs, :rhs
 
       def self.grammar(g)
-        g.operators = g.any("+", "-", "*", "/")
+        g.operators = g.any("+", "-", "*", "/", ">=", ">", "<=", "<")
         g.operator = g.seq(:operator, :sp, :operators, :sp, :level2) { |l,_,o,_,r|
                           Operator.new(o,l,r)
                         } \

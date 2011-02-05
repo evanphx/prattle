@@ -17,6 +17,23 @@ class TestOperator < Test::Unit::TestCase
     assert_equal 4, node.rhs.value
   end
 
+  def test_comparison
+    [">", ">=", "<", "<="].each do |op|
+      str = "3 #{op} 4"
+      parser = Prattle::Parser.new(str)
+      node = parser.parse :operator
+
+      assert_kind_of Prattle::AST::Operator, node
+      assert_equal op, node.operator
+
+      assert_kind_of Prattle::AST::Number, node.lhs
+      assert_equal 3, node.lhs.value
+
+      assert_kind_of Prattle::AST::Number, node.rhs
+      assert_equal 4, node.rhs.value
+    end
+  end
+
   def test_3_plus_4_times_5
     str = "3 + 4 * 5"
     parser = Prattle::Parser.new(str)
