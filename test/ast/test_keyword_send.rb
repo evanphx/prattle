@@ -252,4 +252,36 @@ class TestKeywordSend < Test::Unit::TestCase
 
     assert_equal 8, node.run
   end
+
+  def test_shortcut_ifTrue_ifFalse
+    str = '(4 > 3) ifTrue: [ 7 ] ifFalse: [ 8 ]'
+
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_equal 7, node.run
+
+    str = '(3 > 4) ifTrue: [ 7 ] ifFalse: [ 8 ]'
+
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_equal 8, node.run
+  end
+
+  def test_shortcut_ifFalse_ifTrue
+    str = '(4 > 3) ifFalse: [ 7 ] ifTrue: [ 8 ]'
+
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_equal 8, node.run
+
+    str = '(3 > 4) ifFalse: [ 7 ] ifTrue: [ 8 ]'
+
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_equal 7, node.run
+  end
 end
