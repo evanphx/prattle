@@ -66,7 +66,57 @@ module Prattle
       end
     end
 
+    def add_method(n)
+      name = n.initial.receiver.name
+      sig = n.cascades[0]
+      body = n.cascades[1].arguments[0]
+
+      puts "Adding method #{sig.method_name} to #{name}"
+
+      begin
+        const = Object.const_get(name)
+      rescue NameError
+        const = Class.new
+        Object.const_set name, const
+      end
+
+      const.dynamic_method sig.method_name.to_sym do |g|
+        g.total_args = sig.arguments.size
+        g.required_args = g.total_args
+        g.local_count = g.required_args
+
+        scope = Scope.new
+        g.push_state(scope)
+
+        sig.arguments.each do |arg|
+          scope.add_variable arg.name
+        end
+
+        body.body.each_with_index do |node,idx|
+          g.pop unless idx == 0
+          node.bytecode(g)
+        end
+
+        g.ret
+      end
+    end
+
+    def detect_methods
+      @nodes.delete_if do |n|
+        if n.kind_of? AST::CascadeSend
+          init = n.initial
+          if init.kind_of? AST::UnarySend and init.method_name == "define"
+            add_method(n)
+            next true
+          end
+        end
+
+        false
+      end
+    end
+
     def compile
+      detect_methods
       cm = @lobby.metaclass.dynamic_method :call do |g|
         scope = Scope.new
         g.push_state(scope)
