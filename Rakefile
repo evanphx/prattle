@@ -12,8 +12,7 @@ Rake::TestTask.new do |t|
 end
 
 task :grammar do
-  require 'project_details'
   require 'prattle/parser'
-  gr = KPeg::GrammarRenderer.new(RLK::Project::Parser::Grammar)
+  gr = KPeg::GrammarRenderer.new(Prattle::Parser::Grammar)
   gr.render(STDOUT)
 end
