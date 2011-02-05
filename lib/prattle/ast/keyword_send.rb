@@ -57,6 +57,10 @@ module Prattle
         @receiver.bytecode(g)
 
         if @method_name[0] == ?~
+          if @arguments.last.kind_of? Block
+            block = @arguments.pop
+          end
+
           @arguments.each do |a|
             a.bytecode(g)
           end
@@ -64,7 +68,13 @@ module Prattle
           colon = @method_name.index(":")
           new_name = @method_name[1..colon-1]
 
-          g.send new_name.to_sym, @arguments.size
+          if block
+            block.bytecode(g)
+            g.send_with_block new_name.to_sym, @arguments.size
+          else
+            g.send new_name.to_sym, @arguments.size
+          end
+
         else
           @arguments.each do |a|
             a.bytecode(g)

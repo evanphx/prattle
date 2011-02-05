@@ -106,6 +106,76 @@ class TestKeywordSend < Test::Unit::TestCase
     end
   end
 
+  def test_with_block
+    str = "foo bar: [ baz ]"
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_kind_of Prattle::AST::KeywordSend, node
+    assert_equal "bar:", node.method_name
+
+    assert_kind_of Prattle::AST::Variable, node.receiver
+    assert_equal "foo", node.receiver.name
+
+    args = node.arguments
+    assert_equal 1, args.size
+    assert_kind_of Prattle::AST::Block, args[0]
+    body = args[0].body.first
+
+    assert_kind_of Prattle::AST::Variable, body
+    assert_equal "baz", body.name
+  end
+
+  def test_with_blocks
+    str = "foo bar: [ baz ] with: [ spaz ]"
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_kind_of Prattle::AST::KeywordSend, node
+    assert_equal "bar:with:", node.method_name
+
+    assert_kind_of Prattle::AST::Variable, node.receiver
+    assert_equal "foo", node.receiver.name
+
+    args = node.arguments
+    assert_equal 2, args.size
+    assert_kind_of Prattle::AST::Block, args[0]
+    body = args[0].body.first
+
+    assert_kind_of Prattle::AST::Variable, body
+    assert_equal "baz", body.name
+
+    assert_kind_of Prattle::AST::Block, args[1]
+    body = args[1].body.first
+
+    assert_kind_of Prattle::AST::Variable, body
+    assert_equal "spaz", body.name
+  end
+
+  def test_block_receiver
+    str = "[ baz ] with: [ spaz ]"
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_kind_of Prattle::AST::KeywordSend, node
+    assert_equal "with:", node.method_name
+
+    assert_kind_of Prattle::AST::Block, node.receiver
+    body = node.receiver.body.first
+
+    assert_kind_of Prattle::AST::Variable, body
+    assert_equal "baz", body.name
+
+    args = node.arguments
+    assert_equal 1, args.size
+
+    assert_kind_of Prattle::AST::Block, args[0]
+    body = args[0].body.first
+
+    assert_kind_of Prattle::AST::Variable, body
+    assert_equal "spaz", body.name
+  end
+
   def test_priority
     str = "3 factorial + 4 factorial between: 10 and: 100"
 
