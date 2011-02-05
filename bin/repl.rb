@@ -14,6 +14,8 @@ while str = Readline.readline("> ")
     next
   end
 
+  pp nodes
+
   eval = Prattle::Evaluator.new(nodes, true)
   puts "=> #{eval.run.inspect}"
 end
