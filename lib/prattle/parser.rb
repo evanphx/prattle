@@ -17,6 +17,8 @@ module Prattle
         node.grammar(gram)
       end
 
+      AST.grammar(gram)
+
       gram
     end
 
@@ -48,6 +50,7 @@ module Prattle
 
     path = File.expand_path("../ast", __FILE__)
 
+    require 'prattle/ast/global'
     require 'prattle/ast/node'
 
     Dir["#{path}/*.rb"].sort.each do |f|
