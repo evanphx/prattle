@@ -17,4 +17,8 @@ class TestNumber < Test::Unit::TestCase
     assert_kind_of Prattle::AST::Number, node
     assert_equal 0, node.value
   end
+
+  def test_value
+    assert_equal 42, Prattle::AST::Number.new(42).run
+  end
 end

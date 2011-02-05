@@ -14,6 +14,10 @@ module Prattle
       def self.grammar(g)
         g.self = g.str("self") { Self.new }
       end
+
+      def bytecode(g)
+        g.push :self
+      end
     end
   end
 end

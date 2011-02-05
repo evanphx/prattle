@@ -9,4 +9,8 @@ class TestFalse < Test::Unit::TestCase
 
     assert_kind_of Prattle::AST::False, node
   end
+
+  def test_value
+    assert_equal false, Prattle::AST::False.new.run
+  end
 end

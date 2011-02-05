@@ -18,6 +18,10 @@ module Prattle
           Number.new(i.to_i)
         end
       end
+
+      def bytecode(g)
+        g.push @value
+      end
     end
   end
 end

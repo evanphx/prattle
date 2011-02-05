@@ -13,6 +13,10 @@ module Prattle
       def self.grammar(g)
         g.true = g.str("true") { True.new }
       end
+
+      def bytecode(g)
+        g.push :true
+      end
     end
   end
 end

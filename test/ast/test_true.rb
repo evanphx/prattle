@@ -9,4 +9,8 @@ class TestTrue < Test::Unit::TestCase
 
     assert_kind_of Prattle::AST::True, node
   end
+
+  def test_value
+    assert_equal true, Prattle::AST::True.new.run
+  end
 end

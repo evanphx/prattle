@@ -13,6 +13,10 @@ module Prattle
       def self.grammar(g)
         g.nil = g.str("nil") { Nil.new }
       end
+
+      def bytecode(g)
+        g.push :nil
+      end
     end
   end
 end
