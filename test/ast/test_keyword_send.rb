@@ -236,4 +236,20 @@ class TestKeywordSend < Test::Unit::TestCase
 
     assert_equal nil, node.run
   end
+
+  def test_shortcut_ifFalse
+    str = '(4 > 3) ifFalse: [ 8 ]'
+
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_equal nil, node.run
+
+    str = '(3 > 4) ifFalse: [ 8 ]'
+
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_equal 8, node.run
+  end
 end

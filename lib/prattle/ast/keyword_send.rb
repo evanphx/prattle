@@ -53,13 +53,18 @@ module Prattle
         end
       end
 
-      def self.conditional(g, name, args)
+      def self.if_cond(g, name, args, if_true)
         return false unless args[0].kind_of? AST::Block
 
         done_lbl = g.new_label
         else_lbl = g.new_label
 
-        g.gif else_lbl
+        if if_true
+          g.gif else_lbl
+        else
+          g.git else_lbl
+        end
+
         args[0].body.each_with_index do |e,idx|
           g.pop unless idx == 0
           e.bytecode(g)
@@ -76,8 +81,11 @@ module Prattle
       end
 
       def self.send_method(g, name, args)
-        if name == "ifTrue:"
-          return if conditional g, name, args
+        case name
+        when "ifTrue:"
+          return if if_cond g, name, args, true
+        when "ifFalse:"
+          return if if_cond g, name, args, false
         end
 
         if name[0] == ?~
