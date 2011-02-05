@@ -3,7 +3,7 @@ module Prattle
     def self.grammar(g)
       g.sp = g.kleene g.any(" ", "\n")
       g.sig_sp = g.many g.any(" ", "\n")
-      g.method_name = /~?[a-zA-Z][a-zA-Z0-9]*/
+      g.method_name = /~?[a-zA-Z][a-zA-Z0-9]*[?!]?/
 
       g.grouped = g.seq("(", :sp, g.t(:expression), :sp, ")")
       g.level1 = g.any(:true, :false, :self, :nil, :number,
