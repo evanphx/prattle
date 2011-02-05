@@ -14,7 +14,7 @@ module Prattle
 
       g.level3 = g.any(:operator, :level2)
 
-      g.expression = g.any(:keyword_send, :assign, :level3)
+      g.expression = g.any(:cascade_send, :keyword_send, :assign, :level3)
 
       g.expressions = g.seq(:expression, :sp,
                             g.kleene(

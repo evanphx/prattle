@@ -53,35 +53,39 @@ module Prattle
         end
       end
 
-      def bytecode(g)
-        @receiver.bytecode(g)
-
-        if @method_name[0] == ?~
-          if @arguments.last.kind_of? Block
-            block = @arguments.pop
+      def self.send_method(g, name, args)
+        if name[0] == ?~
+          if args.last.kind_of? Block
+            block = args.pop
           end
 
-          @arguments.each do |a|
+          args.each do |a|
             a.bytecode(g)
           end
 
-          colon = @method_name.index(":")
-          new_name = @method_name[1..colon-1]
+          colon = name.index(":")
+          new_name = name[1..colon-1]
 
           if block
             block.bytecode(g)
-            g.send_with_block new_name.to_sym, @arguments.size
+            g.send_with_block new_name.to_sym, args.size
           else
-            g.send new_name.to_sym, @arguments.size
+            g.send new_name.to_sym, args.size
           end
 
         else
-          @arguments.each do |a|
+          args.each do |a|
             a.bytecode(g)
           end
 
-          g.send @method_name.to_sym, @arguments.size
+          g.send name.to_sym, args.size
         end
+      end
+
+      def bytecode(g)
+        @receiver.bytecode(g)
+
+        KeywordSend.send_method g, @method_name, @arguments
       end
     end
   end
