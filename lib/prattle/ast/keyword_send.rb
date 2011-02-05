@@ -152,7 +152,47 @@ module Prattle
         end
       end
 
+      def loop_cond(g, if_true)
+        return false unless @receiver.kind_of? AST::Block
+        return false unless @arguments[0].kind_of? AST::Block
+
+        top_lbl  = g.new_label
+        done_lbl = g.new_label
+
+        top_lbl.set!
+
+        @receiver.body.each_with_index do |e,idx|
+          g.pop unless idx == 0
+          e.bytecode(g)
+        end
+
+        if if_true
+          g.gif done_lbl
+        else
+          g.git done_lbl
+        end
+
+        @arguments[0].body.each_with_index do |e,idx|
+          e.bytecode(g)
+          g.pop
+        end
+
+        g.goto top_lbl
+
+        done_lbl.set!
+        g.push :nil
+
+        return true
+      end
+
       def bytecode(g)
+        case @method_name
+        when "whileTrue:"
+          return if loop_cond g, true
+        when "whileFalse:"
+          return if loop_cond g, false
+        end
+
         @receiver.bytecode(g)
 
         KeywordSend.send_method g, @method_name, @arguments

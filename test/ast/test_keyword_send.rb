@@ -284,4 +284,34 @@ class TestKeywordSend < Test::Unit::TestCase
 
     assert_equal 7, node.run
   end
+
+  def test_shortcut_whileTrue
+    str = '[ Scratch size < 3 ] whileTrue: [ Scratch ~push: 10 ]'
+
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    begin
+      node.run
+      assert_equal [10, 10, 10], Scratch
+    ensure
+      Scratch.clear
+    end
+  end
+
+  def test_shortcut_whileFalse
+    str = '[ Scratch size >= 3 ] whileFalse: [ Scratch ~push: 10 ]'
+
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    begin
+      node.run
+      assert_equal [10, 10, 10], Scratch
+    ensure
+      Scratch.clear
+    end
+  end
 end
+
+Scratch = []
