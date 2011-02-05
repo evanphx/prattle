@@ -44,7 +44,7 @@ puts "Wrote #{path}"
 
 code = <<-CODE
 require 'test/unit'
-require 'parser'
+require 'prattle/parser'
 
 class Test#{class_name} < Test::Unit::TestCase
   def test_parse
