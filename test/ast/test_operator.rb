@@ -40,6 +40,29 @@ class TestOperator < Test::Unit::TestCase
     assert_equal 5, top.rhs.value
   end
 
+  def test_3_plus_4_times_5_paren
+    str = "3 + (4 * 5)"
+    parser = Prattle::Parser.new(str)
+    top = parser.parse :operator
+
+    assert_kind_of Prattle::AST::Operator, top
+    assert_equal "+", top.operator
+
+    assert_kind_of Prattle::AST::Number, top.lhs
+    assert_equal 3, top.lhs.value
+
+    node = top.rhs
+
+    assert_kind_of Prattle::AST::Operator, node
+    assert_equal "*", node.operator
+
+    assert_kind_of Prattle::AST::Number, node.lhs
+    assert_equal 4, node.lhs.value
+
+    assert_kind_of Prattle::AST::Number, node.rhs
+    assert_equal 5, node.rhs.value
+  end
+
   def test_unary_priority1
     str = "3 + 4 factorial"
 

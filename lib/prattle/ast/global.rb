@@ -5,8 +5,9 @@ module Prattle
       g.sig_sp = g.many g.any(" ", "\n")
       g.method_name = /[a-zA-Z][a-zA-Z0-9]*/
 
+      g.grouped = g.seq("(", :sp, g.t(:root), :sp, ")")
       g.level1 = g.any(:true, :false, :self, :nil, :number,
-                       :string, :symbol, :variable)
+                       :string, :symbol, :variable, :grouped)
 
       g.level2 = g.any(:unary_send, :level1)
 
