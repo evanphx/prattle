@@ -1,5 +1,7 @@
 **prattle** |ˈpratl|
+
 verb [ intrans. ]
+
 talk at length in a foolish or inconsequential way : *she began to prattle on about her visit to the dentist.*
 
 Prattle
