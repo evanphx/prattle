@@ -1,8 +1,37 @@
 module Prattle
+  class Lobby
+    def print(str)
+      Kernel.puts(str)
+    end
+
+    alias_method :"print:", :print
+
+    def show(obj)
+      p obj
+    end
+
+    alias_method :"p:", :show
+
+    def new_class(str)
+      Object.const_set str, Class.new
+
+      puts "Created class #{str}"
+    end
+
+    alias_method :"newclass:", :new_class
+
+    def import(str)
+      require str
+    end
+
+    alias_method :"import:", :import
+  end
+
   class Evaluator
     def initialize(nodes, debug=false)
       @nodes = Array(nodes)
       @debug = debug
+      @lobby = Lobby.new
     end
 
     class Scope
@@ -38,7 +67,7 @@ module Prattle
     end
 
     def compile
-      cm = metaclass.dynamic_method :call do |g|
+      cm = @lobby.metaclass.dynamic_method :call do |g|
         scope = Scope.new
         g.push_state(scope)
 
@@ -59,7 +88,7 @@ module Prattle
 
     def run
       compile
-      call
+      @lobby.call
     end
   end
 end
