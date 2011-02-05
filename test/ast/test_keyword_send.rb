@@ -211,4 +211,13 @@ class TestKeywordSend < Test::Unit::TestCase
 
     assert_equal 2, node.run
   end
+
+  def test_ruby_value_with_block
+    str = '{ 1. 2. 3 } ~map: [ 0 ]'
+
+    parser = Prattle::Parser.new(str)
+    node = parser.parse :keyword_send
+
+    assert_equal [0,0,0], node.run
+  end
 end

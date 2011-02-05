@@ -8,7 +8,7 @@ module Prattle
       g.grouped = g.seq("(", :sp, g.t(:expression), :sp, ")")
       g.level1 = g.any(:true, :false, :self, :nil, :number,
                        :string, :symbol, :variable, :grouped,
-                       :block)
+                       :block, :array_literal)
 
       g.level2 = g.any(:unary_send, :level1)
 

@@ -106,4 +106,11 @@ class TestBlock < Test::Unit::TestCase
     assert_equal 8, node.run
   end
 
+  def test_called_with_args
+    str = "[ :x :y | {x. y} ] ~call: 8 and: 9"
+    parser = Prattle::Parser.new(str)
+    node = parser.parse.first
+
+    assert_equal [8,9], node.run
+  end
 end
